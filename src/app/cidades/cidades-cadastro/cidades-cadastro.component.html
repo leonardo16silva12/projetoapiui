@@ -1,0 +1,32 @@
+<div class="container">
+    <form autocomplete="off" (ngSubmit)="adicionarCidade()" [formGroup]="formulario">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h1 class="alignTT"> Cadastro de Cidades:</h1>
+            </div>
+
+            <div class="ui-g-12 ui-md-9 ui-fluid">
+                <label class="alignT">Nome da Cidade: </label>
+                <input pInputText type="text" name="nome" formControlName="nome">
+
+                <app-message [control]="formulario.get('nome')" error="required" text="Informe o Nome da Cidade!!!"></app-message>
+                <app-message [control]="formulario.get('nome')" error="minlength" text="Mínimo de 5 Caracteres!!!"></app-message>
+            </div>
+
+            <div class="ui-g-6 ui-md-4 ui-fluid">
+                <label class="alignT">UF: </label>
+                <input pInputText type="text" name="estado" formControlName="estado">
+
+                <app-message [control]="formulario.get('estado')" error="required" text="Informe o Nome da Cidade!!!"></app-message>
+                <app-message [control]="formulario.get('estado')" error="maxlength" text="Máximo de 2 Caracteres!!!"></app-message>
+            </div>
+
+            <div class="ui-g-12">
+                <button class="buttonS" pButton type="submit" label="Cadastrar" [disabled]="formulario.invalid"></button>
+                <button class="buttonS" pButton type="button" label="Novo"></button>
+
+                <a routerLink="/cidades" class="alignT"> Voltar para a Pesquisa</a>
+            </div>
+        </div>
+    </form>
+</div>

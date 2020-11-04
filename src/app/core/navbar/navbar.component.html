@@ -1,0 +1,46 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <a href="javascript:;" class="navbar-toggle animate__animated animate__fadeInLeft" (click)="exibirMenu=!exibirMenu">
+          <i class="pi pi-bars animate__animated animate__fadeInLeft" style="font-size: 2em; margin-left: 50px"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <ul class="navbar-menu animate__animated animate__fadeInLeft" [hidden]="!exibirMenu">
+    <li class="navbar-usuario">
+      <img class="img"
+        src="assets/lionlogo.png">
+      <p class="alignBV">Seja bem vindo {{ 'Usuário' }}</p>
+    </li>
+    <li class="navbar-menuitem">
+      <i class="pi pi-globe blueback" style="font-size: 30px"></i>
+      <a routerLink="/cidades">Cidades</a>
+    </li>
+
+    <li class="navbar-menuitem">
+      <i class="pi pi-user blueback" style="font-size: 30px"></i>
+      <a routerLink="/clientes">Clientes</a>
+    </li>
+
+    <li class="navbar-menuitem">
+      <i class="pi pi-th-large blueback" style="font-size: 30px"></i>
+      <a routerLink="/categorias">Categorias</a>
+    </li>
+
+    <li class="navbar-menuitem">
+      <i class="pi pi-shopping-cart blueback" style="font-size: 30px"></i>
+      <a routerLink="/produtos">Produtos</a>
+    </li>
+
+    <li class="navbar-menuitem">
+      <i class="pi pi-folder-open blueback" style="font-size: 30px"></i>
+      <a routerLink="/pedidos">Pedidos</a>
+    </li>
+
+    <li class="navbar-menuitem">
+      <i class="pi pi-sign-out blueback" style="font-size: 30px"></i>
+      <a href="#">Logout</a></li>
+  </ul>
+</nav>

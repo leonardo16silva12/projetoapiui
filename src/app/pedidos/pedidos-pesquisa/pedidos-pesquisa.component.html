@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="ui-g">
+    <form autocomplete="off" (ngSubmit)="pesquisar()">
+      <div class="ui-g-12">
+        <h1 class="alignTT">Pedidos</h1>
+      </div>
+
+      <div class="ui-g-8 ui-fluid">
+        <label class="alignT"> Nome do cliente: </label>
+        <input class="inputS" type="text" pInputText name="nome" [(ngModel)]="filtro.nome" />
+      </div>
+
+      <div class="ui-g-6">
+
+        <label style="display: block" class="dataPedidoStyle">Data Pedido:</label>
+        <p-calendar name="datapedidode" class="dateStyle" dateFormat="dd.mm.yy" [(ngModel)]="filtro.datapedidode"></p-calendar>
+
+
+        <label class="alignTTT"> até </label>
+        <p-calendar name="datapedidoate" class="dateStyle" dateFormat="dd.mm.yy" [(ngModel)]="filtro.datapedidoate"></p-calendar>
+
+
+      </div>
+
+      <div class="ui-g-12">
+        <button class="buttonS" pButton type="submit" label="Pesquisar"></button>
+      </div>
+
+
+    </form>
+  </div>
+
+  <div class="ui-g-12">
+    <div class="ui-g-12">
+      <p-table [value]="pedidos" [paginator]="true" [rows]="filtro.itensPorPagina" [totalRecords]="totalRegistros"
+        [lazy]="true" [responsive]="true" (onLazyLoad)="aoMudarPagina($event)" #tabela>
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="col-id-header">#</th>
+            <th>Data</th>
+            <th class="col-valor-header">Valor</th>
+            <th class="col-nomecliente-header">Cliente</th>
+            <th class="col-acoes-header">Ações</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ped>
+          <tr>
+            <td class="col-id">{{ped.id}}</td>
+            <td>{{ ped.datapedido | date: 'dd/MM/yyyy' }}</td>
+            <td class="col-valor">{{ ped.valorpedido | number:'1.2-2' }}</td>
+            <td class="col-nomecliente">{{ped.cliente.nome}}</td>
+            <td class="col-acoes">
+              <a class="separeB" pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
+                [routerLink]="['/pedidos', ped.id]"> </a>
+              <button class="separeB" pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"
+                (click)="confirmarExclusao(ped)"> </button>
+            </td>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">
+              Nenhum Pedido Encontrado!!!
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <div class="ui-g-12">
+        <a class="buttonP" pButton label="Cadastrar Novo Pedido" routerLink="/pedidos/novo"> </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,160 @@
+<div class="container">
+  <div class="ui-g">
+    <form #f="ngForm" autocomplete="off" (ngSubmit)="salvar(f)">
+      <div class="ui-g-12">
+        <h1 class="alignTT">Pedidos</h1>
+      </div>
+
+      <div class="ui-g-4 ui-md-3 ui-fluid">
+        <label class="alignT"> Data Pedido </label>
+        <p-calendar class="dateStyle" name="datapedido" [(ngModel)]="pedido.datapedido" dateFormat="dd/mm/yy" [inline]="false" [showIcon]="false" [readonlyInput]="true"></p-calendar>
+      </div>
+
+
+      <div class="ui-g-9 ui-fluid">
+        <label class="alignT"> Cliente </label>
+        <p-autoComplete name="cliente" [minLength] = "3" 
+        [size]="200" placeholder="Digite o nome do cliente" 
+        [suggestions]="clientes" [(ngModel)]="pedido.idcliente"
+        field = "nome"
+        (completeMethod)="carregarClientes($event)">
+        </p-autoComplete>
+      </div>
+
+
+    </form>
+  </div>
+
+  <br>
+
+  <div class="ui-g-12">
+    <p-panel>
+      <p-header>
+        <p class="alignTT"> Itens do Pedido </p>
+      </p-header>
+
+      <button pButton type="button" class="p-button-success" icon="pi pi-plus" styleClass="p-button"
+        label="Novo Produto" (click)="prepararNovoItem()">
+      </button>
+
+      <div class="ui-g">
+
+        <div class="ui-g-12">
+
+          <p-table [value]="pedido.itens" [responsive]="true" #tabela>
+
+            <ng-template pTemplate="header">
+
+              <tr>
+
+                <th class="col-id-header">#</th>
+                <th>Nome do Produto</th>
+                <th class="col-idcategoria-header">Qtde Pedido</th>
+                <th class="col-acoes-header">Valor</th>
+                <th class="col-acoes-header">Total</th>
+                <th class="col-acoes-header">&nbsp;</th>
+              </tr>
+
+            </ng-template>
+
+            <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+
+              <tr>
+
+                <td class="col-id">{{item.idproduto.id}}</td>
+                <td>{{item.idproduto.nome}}</td>
+                <td class="col-preco">{{item.qtdeitem}}</td>
+                <td class="col-preco">{{item.valorunitario | number: '1.2-2'}}</td>
+                <td class="col-preco">{{item.totalitem | number: '1.2-2'}}</td>
+                <td class="col-acoes">
+                  <a pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
+                    (click)="prepararEdicaoItem(item, rowIndex)"> </a>
+
+                  <button pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"> </button>
+                </td>
+
+              </tr>
+
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+
+              <tr>
+
+                <td colspan="6">
+                  Nenhum item cadastrado!!!
+                </td>
+
+              </tr>
+
+            </ng-template>
+
+          </p-table>
+
+        </div>
+
+
+
+        <div class="ui-g-4 ui-fluid">
+          <label class="alignT"> Total do Pedido: </label>
+          <input type="text" pInputText [(ngModel)]="pedido.valorpedido" readonly name="valorTotalPedido" placeholder="R$0,00">
+        </div>
+
+
+        <div class="ui-g-12">
+
+          <button pButton type="button" class="p-button-success" icon="pi pi-save" styleClass="p-button"
+            label="Salvar Pedido"></button>
+
+
+          <a routerLink="/pedidos">
+            <button pButton type="button" class="p-button-success" icon="pi pi-arrow-left" styleClass="p-button"
+              label="Voltar para Pesquisa"></button>
+          </a>
+        </div>
+
+      </div>
+    </p-panel>
+  </div>
+</div>
+
+<p-dialog [(visible)]="exibirFormularioItem" modal="true" [closable]="false" [style]="{width: '850px', maxWidth: '850px'}" *ngIf="itempedido">
+  <p-header class="alignTT">
+    Novo Produto
+</p-header>
+  
+
+  <form #frmItem="ngForm" autocomplete="off" (ngSubmit)="confirmarItem(frmItem)">
+
+    <div class="ui-g-10 ui-fluid">
+      <label class="alignT"> Produto </label>
+      <p-autoComplete name="produtos" [minLength] = "3" 
+        [size]="200" placeholder="Digite o nome do produto" 
+        [suggestions]="produtos" [(ngModel)]="itempedido.idproduto"
+        field = "nome"
+        (completeMethod)="carregarProdutos($event)">
+      </p-autoComplete>
+    </div>
+
+    <div class="ui-g-3 ui-fluid">
+      <label class="alignT"> Qtde </label>
+      <input pInputText type="text" name="qtde" [(ngModel)]="itempedido.qtdeitem">
+    </div>
+
+    <div class="ui-g-3 ui-fluid">
+      <label class="alignT"> Valor Unitário </label>
+      <input pInputText type="text" name="valorunitario" [(ngModel)]="itempedido.valorunitario">
+    </div>
+
+    <div class="ui-g-3 ui-fluid">
+      <label class="alignT"> Total </label>
+      <input pInputText type="text" name="total" [(ngModel)]="itempedido.totalitem">
+    </div>
+
+    <div class="ui-g-12">
+      <button pButton type="submit" class="p-button-success" styleClass="p-button" label="Confirmar"></button>
+      <button pButton type="button" class="p-button-success" styleClass="p-button" label="Fechar" (click)="closeForm()"></button>
+    </div>
+
+  </form>
+</p-dialog>

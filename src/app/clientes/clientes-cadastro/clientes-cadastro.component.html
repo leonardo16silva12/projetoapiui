@@ -1,0 +1,39 @@
+<div class="container">
+    <form autocomplete="off" (ngSubmit)="salvar()" [formGroup]="formulario">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h1 class="alignTT"> Cadastro de Clientes:</h1>
+            </div>
+
+            <div class="ui-g-12 ui-md-9 ui-fluid">
+                <label class="alignT"> Nome do Cliente: </label>
+                <input pInputText type="text" name="nome" formControlName="nome">
+
+                <app-message [control]="formulario.get('nome')" error="required" text="Informe o Nome do Cliente!!!"></app-message>
+                <app-message [control]="formulario.get('nome')" error="minlength" text="Mínimo de 5 Caracteres!!!"></app-message>
+
+            </div>
+
+            <div class="ui-g-6 ui-md-4 ui-fluid">
+                <label class="alignT">Telefone: </label>
+                <input pInputText type="text" name="telefone" formControlName="telefone">
+
+                <app-message [control]="formulario.get('telefone')" error="required" text="Informe o Telefone do Cliente!!!"></app-message>
+
+            </div>
+
+            <div class="ui-g-6 ui-md-4 ui-fluid" formGroupName="cidade">
+                <label class="alignT"> Cidade: </label>
+                <p-dropdown name="cidade" placeholder="Selecione..." [options]="cidades" [filter]="true" formControlName="id"></p-dropdown>
+                <app-message [control]="formulario.get('cidade.id')" error="required" text="Informe a Cidade!!!"></app-message>
+            </div>
+
+            <div class="ui-g-12">
+                <button class="buttonS" pButton type="submit" label="Cadastrar" [disabled]="formulario.invalid"></button>
+                <button class="buttonS" pButton type="button" label="Novo"></button>
+
+                <a routerLink="/clientes"> Voltar para a Pesquisa</a>
+            </div>
+        </div>
+    </form>
+</div>

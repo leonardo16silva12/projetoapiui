@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="ui-g">
+        <form autocomplete="off" (ngSubmit)="pesquisar()">
+            <div class="ui-g-12">
+                <h1 class="alignTT">Clientes</h1>
+            </div>
+
+            <div class="ui-g-12 ui-fluid">
+                <label class="alignT"> Digite o nome do cliente: </label>
+                <input class="inputS" type="text" pInputText name="nome" [(ngModel)]="filtro.nome" />
+            </div>
+
+            <div class="ui-g-12">
+                <button class="buttonS" pButton type="submit" label="Pesquisar"></button>
+            </div>
+        </form>
+    </div>
+
+    <div class="ui-g-12">
+        <div class="ui-g-12">
+            <p-table [value]="clientes" [paginator]="true" [rows]="filtro.itensPorPagina" [totalRecords]="totalRegistros" [lazy]="true" [responsive]="true" (onLazyLoad)="aoMudarPagina($event)" #tabela>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="col-id-header">#</th>
+                        <th>Nome da Cliente</th>
+                        <th class="col-telefone-header">Telefone</th>
+                        <th class="col-estado-header">Estado</th>
+                        <th class="col-nomecidade-header">Cidade</th>
+                        <th class="col-acoes-header">Ações</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-cli>
+                    <tr>
+                        <td class="col-id">{{cli.id}}</td>
+                        <td>{{cli.nome}}</td>
+                        <td class="col-telefone">{{cli.telefone}}</td>
+                        <td class="col-estado">{{cli.cidade.estado}}</td>
+                        <td class="col-nomecidade">{{cli.cidade.nome}}</td>
+                        <td class="col-acoes">
+                            <a class="separeB" pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top" [routerLink]="['/clientes', cli.id]"> </a>
+                            <button class="separeB" pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top" (click)="confirmarExclusao(cli)"> </button>
+                        </td>
+
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="4">
+                            Nenhum Cliente Encontrado!!!
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <div class="ui-g-12">
+                <a class="buttonP" pButton label="Cadastrar Novo Cliente" routerLink="/clientes/novo"> </a>
+            </div>
+        </div>
+    </div>
+</div>

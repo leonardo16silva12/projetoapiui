@@ -1,0 +1,38 @@
+<div class="container">
+    <form autocomplete="off" (ngSubmit)="adicionarProduto()" [formGroup]="formulario">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h1 class="alignTT"> Cadastro de Produtos:</h1>
+            </div>
+
+            <div class="ui-g-12 ui-md-9 ui-fluid">
+                <label class="alignT">Nome do Produto: </label>
+                <input pInputText type="text" name="nome" formControlName="nome">
+
+                <app-message [control]="formulario.get('nome')" error="required" text="Informe o Nome do Produto!!!"></app-message>
+                <app-message [control]="formulario.get('nome')" error="maxlength" text="Mínimo de 3 Caracteres!!!"></app-message>
+            </div>
+
+            <div class="ui-g-6 ui-md-4 ui-fluid">
+                <label class="alignT">Preço do Produto: </label>
+                <input pInputText type="text" name="preco" formControlName="preco">
+
+                <app-message [control]="formulario.get('preco')" error="required" text="Informe o Preço do Produto!!!"></app-message>
+                <app-message [control]="formulario.get('preco')" error="maxlength" text="Mínimo de 2 Caracteres!!!"></app-message>
+            </div>
+
+            <div class="ui-g-6 ui-md-4 ui-fluid" formGroupName="categoria">
+                <label class="alignT"> Categoria: </label>
+                <p-dropdown name="categoria"  placeholder="Selecione..." [options]="categorias" [filter]="true" formControlName="id"></p-dropdown>
+                <app-message [control]="formulario.get('categoria.id')" error="required" text="Informe a Categoria!!!"></app-message>
+			</div>
+            
+            <div class="ui-g-12">
+                <button class="buttonS" pButton type="submit" label="Cadastrar" [disabled]="formulario.invalid"></button>
+                <button class="buttonS" pButton type="button" label="Novo"></button>
+
+                <a routerLink="/produtos" class="alignT"> Voltar para a Pesquisa</a>
+            </div>
+        </div>
+    </form>
+</div>

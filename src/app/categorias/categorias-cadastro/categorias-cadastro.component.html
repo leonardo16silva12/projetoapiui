@@ -1,0 +1,24 @@
+<div class="container">
+    <form autocomplete="off" (ngSubmit)="adicionarCategoria()" [formGroup]="formulario">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h1 class="alignTT"> Cadastro de Categorias:</h1>
+            </div>
+
+            <div class="ui-g-12 ui-md-9 ui-fluid">
+                <label class="alignT">Nome da Categoria: </label>
+                <input pInputText type="text" name="nome" formControlName="nome">
+
+                <app-message [control]="formulario.get('nome')" error="required" text="Informe o Nome da Categoria!!!"></app-message>
+                <app-message [control]="formulario.get('nome')" error="maxlength" text="Mínimo de 5 Caracteres!!!"></app-message>
+            </div>
+
+            <div class="ui-g-12">
+                <button class="buttonS" pButton type="submit" label="Cadastrar" [disabled]="formulario.invalid"></button>
+                <button class="buttonS" pButton type="button" label="Novo"></button>
+
+                <a routerLink="/categorias" class="alignT"> Voltar para a Pesquisa</a>
+            </div>
+        </div>
+    </form>
+</div>
