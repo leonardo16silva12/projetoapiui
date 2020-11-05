@@ -49,7 +49,7 @@
 
                 <th class="col-id-header">#</th>
                 <th>Nome do Produto</th>
-                <th class="col-idcategoria-header">Qtde Pedido</th>
+                <th class="col-idcategoria-header">Qtde</th>
                 <th class="col-acoes-header">Valor</th>
                 <th class="col-acoes-header">Total</th>
                 <th class="col-acoes-header">&nbsp;</th>
@@ -70,7 +70,8 @@
                   <a pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
                     (click)="prepararEdicaoItem(item, rowIndex)"> </a>
 
-                  <button pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"> </button>
+                  <button pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"
+                  (click)="removerItem(rowIndex)"> </button>
                 </td>
 
               </tr>
@@ -138,7 +139,7 @@
 
     <div class="ui-g-3 ui-fluid">
       <label class="alignT"> Qtde </label>
-      <input pInputText type="text" name="qtde" [(ngModel)]="itempedido.qtdeitem">
+      <input pInputText type="text" name="qtde" [(ngModel)]="itempedido.qtdeitem" (blur)="calcularTotalItem()">
     </div>
 
     <div class="ui-g-3 ui-fluid">

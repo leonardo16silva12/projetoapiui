@@ -55,6 +55,7 @@ export class PedidosCadastroComponent implements OnInit {
     const query = event.query;
     this.produtosService.getProdutos(query).then(produtos => {
       this.produtos = produtos;
+      this.itempedido.valorunitario = produtos[0].preco;
     });
   }
 
@@ -138,6 +139,14 @@ export class PedidosCadastroComponent implements OnInit {
   
     clonarItem(itemPedido: ItemPedido): ItemPedido {
     return new ItemPedido(itemPedido.id, itemPedido.idproduto, itemPedido.qtdeitem, itemPedido.valorunitario, itemPedido.totalitem);
+    }
+
+    removerItem(index: number) {
+      this.pedido.itens.splice(index, 1);
+    }
+
+    calcularTotalItem() {
+      this.itempedido.totalitem = this.itempedido.qtdeitem * this.itempedido.valorunitario;
     }
   
     closeForm() {
