@@ -26,6 +26,7 @@ export class PedidosCadastroComponent implements OnInit {
   pedido = new Pedido();
   itempedido: ItemPedido;
   itemIndex: number;
+  pedidoTotal = 0;
 
 
 
@@ -55,8 +56,20 @@ export class PedidosCadastroComponent implements OnInit {
     const query = event.query;
     this.produtosService.getProdutos(query).then(produtos => {
       this.produtos = produtos;
-      this.itempedido.valorunitario = produtos[0].preco;
     });
+  }
+
+  atribuirValorUnitario() {
+    this.itempedido.valorunitario = this.itempedido.idproduto.preco;
+  }
+
+  calcularTotalPedido(){
+	  this.pedidoTotal = 0;
+	  
+	  for(let i = 0; i < this.pedido.itens.length; i++){
+		  this.pedidoTotal += this.pedido.itens[i].totalitem;
+	  }
+	  this.pedido.valorpedido = this.pedidoTotal;
   }
 
   carregarClientes(event) {
@@ -132,8 +145,8 @@ export class PedidosCadastroComponent implements OnInit {
     }
   
     confirmarItem(frm: FormControl) {
-      console.log('Confirmou');
       this.pedido.itens[this.itemIndex] = this.clonarItem(this.itempedido);
+      this.calcularTotalPedido();
       this.prepararNovoItem();
     }
   
@@ -143,6 +156,7 @@ export class PedidosCadastroComponent implements OnInit {
 
     removerItem(index: number) {
       this.pedido.itens.splice(index, 1);
+      this.calcularTotalPedido();
     }
 
     calcularTotalItem() {

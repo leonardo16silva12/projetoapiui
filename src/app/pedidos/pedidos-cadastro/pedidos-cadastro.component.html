@@ -133,7 +133,7 @@
         [size]="200" placeholder="Digite o nome do produto" 
         [suggestions]="produtos" [(ngModel)]="itempedido.idproduto"
         field = "nome"
-        (completeMethod)="carregarProdutos($event)">
+        (completeMethod)="carregarProdutos($event)" (onSelect)="atribuirValorUnitario()">
       </p-autoComplete>
     </div>
 

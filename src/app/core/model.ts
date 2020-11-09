@@ -19,7 +19,7 @@ export class Categoria {
 export class Produto {
     id: number;
     nome: string;
-    preco: string;
+    preco: number;
     idcategoria = new Categoria();
 }
 
