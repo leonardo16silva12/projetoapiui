@@ -54,6 +54,7 @@ const routes: Routes = [
   {path: 'produtos/:id', component: ProdutosCadastroComponent},
   {path: 'pedidos/novo', component: PedidosCadastroComponent},
   {path: 'pedidos', component: PedidosPesquisaComponent},
+  {path: 'pedidos/:id', component: PedidosCadastroComponent},
   
 
 ]

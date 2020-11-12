@@ -2,7 +2,7 @@ import { ErrorHandlerService } from './../../core/error-handler.service';
 import { MessageService } from 'primeng/api';
 import { ProdutosService } from '../../produtos/produtos.service';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ClientesService } from '../../clientes/clientes.service';
 import { Pedido } from 'src/app/core/model';
@@ -17,39 +17,104 @@ import { ItemPedido } from '../../core/model';
 })
 export class PedidosCadastroComponent implements OnInit {
 
-
-  produtos = [];
-  formulario: FormGroup;
+  pedido = new Pedido();
   exibirFormularioItem = false;
   clientes = [];
-  results: string[];
-  pedido = new Pedido();
+  produtos = [];
   itempedido: ItemPedido;
   itemIndex: number;
   pedidoTotal = 0;
 
-
-
-
   constructor(
-    private formBuilder: FormBuilder,
-    private produtosService: ProdutosService,
-    private pedidosService: PedidosService,
-    private clientesService: ClientesService,
-    private messageService: MessageService,
     private route: ActivatedRoute,
+    private pedidosService: PedidosService,
+    private messageService: MessageService,
     private errorHandler: ErrorHandlerService,
     private router: Router,
+    private clientesService: ClientesService,
+    private produtosService: ProdutosService,
   ) { }
 
   ngOnInit() {
-    this.configurarFormulario();
-
     const idPedido = this.route.snapshot.params['id'];
 
-    if (idPedido){
+    if (idPedido) {
       this.carregarPedido(idPedido);
     }
+  }
+
+  carregarPedido(id: number) {
+    this.pedidosService.buscarPorId(id)
+      .then(pedido => {
+        this.pedido = pedido;
+      });
+  }
+
+  get editando() {
+    return Boolean(this.pedido.id);
+  }
+
+  carregarClientes(event) {
+    const query = event.query;
+    this.clientesService.getClientes(query).then(clientes => {
+      this.clientes = clientes;
+    });
+  }
+
+  salvar(form: FormControl) {
+    if (this.editando) {
+      this.atualizarPedido(form);
+    } else {
+      this.adicionarPedido(form);
+    }
+  }
+
+  adicionarPedido(form: FormControl) {
+    this.pedidosService.adicionar(this.pedido)
+      .then(pedidoAdicionado => {
+        this.messageService.add({ severity: 'success', detail: 'Pedido adicionado com sucesso' });
+
+        this.router.navigate(['/pedidos']);
+      })
+      .catch(erro => {
+        this.errorHandler.handle(erro);
+      });
+  }
+
+  atualizarPedido(form: FormControl) {
+    this.pedidosService.atualizar(this.pedido)
+      .then(pedido => {
+        this.pedido = pedido;
+        this.messageService.add({ severity: 'success', detail: 'Pedido alterado com sucesso' });
+      })
+      .catch(erro => this.errorHandler.handle(erro));
+  }
+
+  // Itens do Pedido
+  prepararNovoItem() {
+    this.exibirFormularioItem = true;
+    this.itempedido = new ItemPedido();
+    this.itemIndex = this.pedido.itens.length;
+  }
+
+  prepararEdicaoItem(itempedido: ItemPedido, index: number) {
+    this.itempedido = this.clonarItem(itempedido);
+    this.exibirFormularioItem = true;
+    this.itemIndex = index;
+  }
+
+  confirmarItem(frm: FormControl) {
+    this.pedido.itens[this.itemIndex] = this.clonarItem(this.itempedido);
+    this.calcularTotalPedido();
+    this.prepararNovoItem();
+  }
+
+  clonarItem(itemPedido: ItemPedido): ItemPedido {
+    return new ItemPedido(itemPedido.id, itemPedido.produto, itemPedido.qtdeitem, itemPedido.valorunitario, itemPedido.totalitem);
+  }
+
+  closeForm() {
+    this.exibirFormularioItem = false;
   }
 
   carregarProdutos(event) {
@@ -60,113 +125,24 @@ export class PedidosCadastroComponent implements OnInit {
   }
 
   atribuirValorUnitario() {
-    this.itempedido.valorunitario = this.itempedido.idproduto.preco;
+    this.itempedido.valorunitario = this.itempedido.produto.preco;
   }
 
-  calcularTotalPedido(){
-	  this.pedidoTotal = 0;
-	  
-	  for(let i = 0; i < this.pedido.itens.length; i++){
-		  this.pedidoTotal += this.pedido.itens[i].totalitem;
-	  }
-	  this.pedido.valorpedido = this.pedidoTotal;
-  }
-
-  carregarClientes(event) {
-    const query = event.query;
-    this.clientesService.getClientes(query).then(clientes => {
-      this.clientes = clientes;
-    });
-  }
-
-  carregarPedido(id: number) {
-    this.pedidosService.buscarPorId(id)
-    .then(pedido => {
-      this.pedido = pedido;
-    })
-    .catch(erro => this.errorHandler.handle(erro));
-  }
-
-  get editando() {
-    return Boolean(this.pedido.id);
-  }
-
-  configurarFormulario() {
-    this.formulario = this.formBuilder.group({
-
-      id: [],
-      nome: [null, [Validators.required, Validators.minLength(3)]],
-      preco: [null, [Validators.required, Validators.minLength(2)]],
-      categoria: this.formBuilder.group({
-        id: [null, Validators.required],
-        nome: []
-      })
-    });
-  }
-
-  salvar(form: FormControl) {
-    if(this.editando) {
-      this.atualizarPedido(form);
-    } else {
-      this.adicionarPedido(form);
+  calcularTotalPedido() {
+    this.pedidoTotal = 0;
+    for (let i = 0; i < this.pedido.itens.length; i++) {
+      this.pedidoTotal += this.pedido.itens[i].totalitem;
     }
+    this.pedido.valorpedido = this.pedidoTotal;
   }
 
-  adicionarPedido(form: FormControl){
-    this.pedidosService.adicionar(this.pedido)
-    .then(pedidoAdicionado => {  
-      this.messageService.add({severity: 'success', detail: 'Pedido adicionado com sucesso'});
-    
-      this.router.navigate(['/pedidos']);
-    })
-    .catch(erro => this.errorHandler.handle(erro));
+  removerItem(index: number) {
+    this.pedido.itens.splice(index, 1);
+    this.calcularTotalPedido();
   }
 
-  atualizarPedido(form: FormControl) {
-    this.pedidosService.atualizar(this.pedido)
-    .then(pedido => {
-      this.pedido = pedido;
-      this.messageService.add({severity: 'success', detail: 'Pedido alterado com sucesso'});
-    })
-    .catch(erro => this.errorHandler.handle(erro));
+  calculaTotalItem() {
+    this.itempedido.totalitem = this.itempedido.qtdeitem * this.itempedido.valorunitario;
   }
-
-    /* Itens Pedido */
-    prepararNovoItem() {
-      this.exibirFormularioItem = true;
-      this.itempedido = new ItemPedido();
-      this.itemIndex = this.pedido.itens.length;
-    }
-
-    prepararEdicaoItem(itempedido: ItemPedido, index: number) {
-      this.itempedido = this.clonarItem(itempedido);
-      this.exibirFormularioItem = true;
-      this.itemIndex = index;
-    }
-  
-    confirmarItem(frm: FormControl) {
-      this.pedido.itens[this.itemIndex] = this.clonarItem(this.itempedido);
-      this.calcularTotalPedido();
-      this.prepararNovoItem();
-    }
-  
-    clonarItem(itemPedido: ItemPedido): ItemPedido {
-    return new ItemPedido(itemPedido.id, itemPedido.idproduto, itemPedido.qtdeitem, itemPedido.valorunitario, itemPedido.totalitem);
-    }
-
-    removerItem(index: number) {
-      this.pedido.itens.splice(index, 1);
-      this.calcularTotalPedido();
-    }
-
-    calcularTotalItem() {
-      this.itempedido.totalitem = this.itempedido.qtdeitem * this.itempedido.valorunitario;
-    }
-  
-    closeForm() {
-      this.exibirFormularioItem = false;
-    }
-
-
 
 }

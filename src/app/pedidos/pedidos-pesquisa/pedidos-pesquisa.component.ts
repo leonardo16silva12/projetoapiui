@@ -14,12 +14,14 @@ export class PedidosPesquisaComponent implements OnInit {
   filtro = new PedidoFiltro();
   pedidos = [];
 
-  @ViewChild('tabela', {static: true}) grid;
+  @ViewChild('tabela', { static: true }) grid;
 
-  constructor(private pedidosService: PedidosService,
+  constructor(
+    private pedidosService: PedidosService,
     private confirmation: ConfirmationService,
     private errorHandler: ErrorHandlerService,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+  ) { }
 
   ngOnInit() {
     this.pesquisar();
@@ -33,15 +35,15 @@ export class PedidosPesquisaComponent implements OnInit {
         this.totalRegistros = resultado.total;
         this.pedidos = resultado.pedidos;
       });
-      
-    }
 
-  aoMudarPagina(event: LazyLoadEvent) {
-      const pagina = event.first / event.rows;
-      this.pesquisar(pagina);
   }
 
-  confirmarExclusao(pedido: any){
+  aoMudarPagina(event: LazyLoadEvent) {
+    const pagina = event.first / event.rows;
+    this.pesquisar(pagina);
+  }
+
+  confirmarExclusao(pedido: any) {
     this.confirmation.confirm({
       message: 'Tem certeza que deseja excluir esse registro?',
       accept: () => {
@@ -50,21 +52,17 @@ export class PedidosPesquisaComponent implements OnInit {
     });
   }
 
-  excluir(pedido: any){
+  excluir(pedido: any) {
     this.pedidosService.excluir(pedido.id)
-    .then(() => 
-    {
-      if (this.grid.first === 0){
-        this.pesquisar();
-      }
-      else {
-        this.grid.first = 0;
-      }
-      this.messageService.add({severity: 'success', summary:'Atenção', detail: 'Pedido Excluído com Sucesso'});
-    })
-    .catch(erro => this.errorHandler.handle(erro));
+      .then(() => {
+        if (this.grid.first === 0) {
+          this.pesquisar();
+        } else {
+          this.grid.first = 0;
+        }
+        this.messageService.add({ severity: 'success', summary: 'Atenção', detail: 'Pedido excluido com sucesso' });
+      })
+      .catch(erro => this.errorHandler.handle(erro));
   }
 
 }
-
-

@@ -24,18 +24,18 @@ import {DialogModule} from 'primeng/dialog';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
-    SharedModule,
     RouterModule,
     InputTextModule,
     ButtonModule,
     TableModule,
     TooltipModule,
-    DropdownModule,
-    PanelModule,
+    ReactiveFormsModule,
+    SharedModule,
     CalendarModule,
-    AutoCompleteModule,
-    DialogModule
+    DropdownModule,
+	AutoCompleteModule,
+	PanelModule,
+	DialogModule
   ]
 })
 export class PedidosModule { }

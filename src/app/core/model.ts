@@ -1,7 +1,6 @@
-export class Cidade {
+export class Categoria {
     id: number;
     nome: string;
-    estado: string;
 }
 
 export class Cliente {
@@ -11,9 +10,10 @@ export class Cliente {
     cidade_id = new Cidade();
 }
 
-export class Categoria {
+export class Cidade {
     id: number;
     nome: string;
+    estado: string;
 }
 
 export class Produto {
@@ -26,29 +26,29 @@ export class Produto {
 export class Pedido {
     id: number;
     datapedido: Date;
+    cliente = new Cliente();
     valorpedido: number;
-    idcliente = new Cliente();
     itens = new Array<ItemPedido>();
 }
 
 export class ItemPedido {
     id: number;
-    idproduto = new Produto();
+    produto = new Produto();
     qtdeitem: number;
     valorunitario: number;
     totalitem: number;
 
     constructor(
         id?: number,
-        idproduto?: Produto,
+        produto?: Produto,
         qtdeitem?: number,
         valorunitario?: number,
-        totalitem?: number) {
+        totalitem?: number
+    ) {
             this.id = id,
-            this.idproduto = idproduto,
+            this.produto = produto,
             this.qtdeitem = qtdeitem,
             this.valorunitario = valorunitario,
             this.totalitem = totalitem;
-        }
-        
+    }
 }

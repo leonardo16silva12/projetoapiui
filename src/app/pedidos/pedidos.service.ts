@@ -16,7 +16,9 @@ export class PedidoFiltro {
 })
 export class PedidosService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   pedidosUrl = 'http://localhost:8080/pedidos';
 
@@ -48,22 +50,9 @@ export class PedidosService {
         const resultado = {
           pedidos,
           total: response.totalElements
-        }
+        };
         return resultado;
       });
-  }
-
-  adicionar(pedido: Pedido): Promise<Pedido> {
-    return this.http.post<Pedido>(this.pedidosUrl, pedido).toPromise();
-  }
-
-  atualizar(pedido: Pedido): Promise<Pedido> {
-    return this.http.put<Pedido>(`${this.pedidosUrl}/${pedido.id}`, pedido)
-    .toPromise()
-    .then(response => {
-      const pedidoAlterado = response;
-      return pedidoAlterado;
-    });
   }
 
   excluir(id: number): Promise<void> {
@@ -72,24 +61,35 @@ export class PedidosService {
       .then(() => null);
   }
 
+  adicionar(pedido: Pedido): Promise<Pedido> {
+    return this.http.post<Pedido>(this.pedidosUrl, pedido).toPromise();
+  }
+
+  atualizar(pedido: Pedido): Promise<Pedido> {
+    return this.http.put<Pedido>(`${this.pedidosUrl}/${pedido.id}`, pedido)
+      .toPromise()
+      .then(response => {
+        const pedidoAlterado = response;
+        this.converterStringsParaDatas([pedidoAlterado]);
+        return pedidoAlterado;
+      });
+  }
+
   buscarPorId(id: number): Promise<Pedido> {
-    return this.http.get<Pedido>(`${this.pedidosUrl}/${id} `)
-    .toPromise()
-    .then(response => {
-      const pedido = response;
-      return pedido;
-    });
-}
+    return this.http.get<Pedido>(`${this.pedidosUrl}/${id}`)
+      .toPromise()
+      .then(response => {
+        const pedido = response;
+        this.converterStringsParaDatas([pedido]);
+        return pedido;
+      });
+  }
 
-listarTodasPedidos(): Promise<Pedido[]> {
-  return this.http.get<Pedido[]>(`${this.pedidosUrl}/todas`).toPromise();
-}
-
-private stringDatas(pedidos : Pedido[]) {
-  for (const pedido of pedidos) {
-    if(pedido.datapedido) {
-      pedido.datapedido = moment(pedido.datapedido, 'YYYY-MM-DD').toDate();
+  private converterStringsParaDatas(pedidos: Pedido[]) {
+    for (const pedido of pedidos) {
+      if (pedido.datapedido) {
+        pedido.datapedido = moment(pedido.datapedido, 'YYYY-MM-DD').toDate();
+      }
     }
   }
-}
 }
